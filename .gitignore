@@ -10,3 +10,4 @@ experiments/
 *.log
 *.egg-info/
 _version.py
+setup-server
