@@ -1,0 +1,12 @@
+/runserver
+.env
+.venv
+__pycache__
+*.pyc
+*.code-workspace
+*.sqlite3
+secrets.py
+experiments/
+*.log
+*.egg-info/
+_version.py
