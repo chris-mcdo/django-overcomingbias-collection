@@ -1,12 +1,16 @@
 import os
+from pathlib import Path
 
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 
 from obcollection.settings.base import *  # noqa
 
-# take environment variables from .env
-load_dotenv(find_dotenv())
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+
+# take environment variables from .env
+load_dotenv(BASE_DIR / ".env")
 
 # Secrets
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fake-key")
