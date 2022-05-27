@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "debug_toolbar",
+    "huey.contrib.djhuey",
     "haystack",
     "ordered_model",
     "obapi",
