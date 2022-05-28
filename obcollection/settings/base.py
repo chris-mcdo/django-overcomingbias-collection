@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "obcollection.apps.CustomAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
