@@ -5,8 +5,7 @@ __pycache__
 *.pyc
 *.code-workspace
 *.sqlite3
-secrets.py
-experiments/
+config/
 *.log
 *.egg-info/
 _version.py
