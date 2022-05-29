@@ -68,7 +68,8 @@ LOGGING = {
 # Email
 # https://docs.djangoproject.com/en/4.0/topics/email/
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "hueymail.backends.EmailBackend"
+HUEY_EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # Huey settings
