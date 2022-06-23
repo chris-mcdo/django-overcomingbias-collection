@@ -42,9 +42,6 @@ RUN \
     mkdir /etc/opt/${DJANGO_PROJECT}; \
     chgrp ${DJANGO_GROUP} /etc/opt/${DJANGO_PROJECT}; \
     chmod 750 /etc/opt/${DJANGO_PROJECT}; \
-    # Make log directory
-    mkdir /var/log/${DJANGO_PROJECT}; \
-    chown ${DJANGO_USER}:${DJANGO_GROUP} /var/log/${DJANGO_PROJECT}; \
     # Remove source code
     rm -rf /tmp/*; \
     # Purge build dependencies
