@@ -1,4 +1,5 @@
 /runserver
+.gitignore
 *.env
 .venv
 __pycache__
@@ -7,5 +8,5 @@ __pycache__
 *.sqlite3
 *.log
 *.egg-info/
+_version.py
 setup-server
-settings.py
