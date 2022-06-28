@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM ghcr.io/chris-mcdo/pandoc2-python39:latest
 
-ARG OBAPI_VERSION=0.2.4
+ARG OBAPI_VERSION=0.2.5
 ARG OBPAGES_VERSION=0.1.1
 
 ENV DJANGO_PROJECT=obcollection
