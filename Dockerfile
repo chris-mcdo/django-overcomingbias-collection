@@ -21,7 +21,7 @@ RUN apt-get update; \
     rm -rf /var/lib/apt/lists/*;
 
 # Add source code
-ADD . /tmp/code/${DJANGO_PROJECT}
+COPY . /tmp/code/${DJANGO_PROJECT}
 
 # Install from source in a virtual environment, then cleanup 
 RUN \
