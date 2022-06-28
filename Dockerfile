@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1
 FROM ghcr.io/chris-mcdo/pandoc2-python39:latest
 
+ARG OBAPI_VERSION=0.2.3
+ARG OBPAGES_VERSION=0.1.1
+
 ENV DJANGO_PROJECT=obcollection
 ENV DJANGO_USER=${DJANGO_PROJECT}
 ENV DJANGO_GROUP=${DJANGO_USER}
@@ -34,6 +37,9 @@ RUN \
     /usr/local/bin/python3 -m venv /opt/${DJANGO_PROJECT}/venv; \
     # Upgrade pip
     /opt/${DJANGO_PROJECT}/venv/bin/pip3 install --no-cache-dir --upgrade pip; \
+    # Explicitly install main dependencies
+    /opt/${DJANGO_PROJECT}/venv/bin/pip3 install --no-cache-dir django-overcomingbias-api==${OBAPI_VERSION}; \
+    /opt/${DJANGO_PROJECT}/venv/bin/pip3 install --no-cache-dir django-overcomingbias-pages==${OBPAGES_VERSION}; \
     # Install package and production dependencies
     /opt/${DJANGO_PROJECT}/venv/bin/pip3 install --no-cache-dir /tmp/code/${DJANGO_PROJECT}/[production]; \
     # Copy management script
