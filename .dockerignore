@@ -1,12 +1,15 @@
-/runserver
+# folders
+.git
+.github
+.venv
+*.egg-info
+# files
+runserver
 .gitignore
 *.env
-.venv
-__pycache__
-*.pyc
+**/__pycache__
+**/*.pyc
 *.code-workspace
 *.sqlite3
 *.log
-*.egg-info/
-_version.py
 setup-server
