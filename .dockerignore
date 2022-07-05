@@ -13,3 +13,4 @@ runserver
 *.sqlite3
 *.log
 setup-server
+example-settings.py
