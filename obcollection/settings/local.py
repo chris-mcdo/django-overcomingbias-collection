@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from redis import ConnectionPool
 
 from obcollection.settings.base import *  # noqa
 
@@ -76,26 +75,12 @@ HUEY_EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # https://huey.readthedocs.io/en/latest/django.html#setting-things-up
 
 # Create redis connection pool
-# use URL set by environment variable in production
-# e.g. os.getenv('REDIS_URL', 'redis://localhost:6379/?db=1')
-connection_pool = ConnectionPool(host="127.0.0.1", port=6379, db=0, max_connections=100)
 
 # See docs for full list of settings
 HUEY = {
-    "huey_class": "huey.PriorityRedisHuey",
+    "huey_class": "huey.MemoryHuey",
     "name": "obcollection",
-    "immediate": False,
-    "connection": {
-        "connection_pool": connection_pool,
-        # see redis-py for more options
-        # https://redis-py.readthedocs.io/en/latest/connections.html
-        # huey-specific connection parameters.
-        "read_timeout": 0,
-    },
-    "consumer": {
-        "workers": 4,  # Probably increase
-        "worker_type": "thread",
-    },
+    "immediate": True,
 }
 
 
@@ -104,8 +89,11 @@ HUEY = {
 
 HAYSTACK_CONNECTIONS = {
     "default": {
-        "ENGINE": "haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine",
-        "URL": "http://127.0.0.1:9200/",
-        "INDEX_NAME": "haystack",
+        "ENGINE": "haystack.backends.simple_backend.SimpleEngine",
     },
 }
+
+
+# django-overcomingbias-api settings
+
+OBAPI_DOWNLOAD_BATCH_SIZE = 200
