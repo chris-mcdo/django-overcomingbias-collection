@@ -1,5 +1,4 @@
 # folders
-.git
 .github
 .venv
 *.egg-info
@@ -14,3 +13,8 @@ runserver
 *.log
 setup-server
 example-settings.py
+
+# The following are needed by setuptools_scm and should not be ignored
+# .git
+# LICENSE
+# README.rst
