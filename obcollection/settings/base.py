@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "debug_toolbar",
+    "django_select2",
     "huey.contrib.djhuey",
     "hueymail",
     "haystack",
