@@ -66,6 +66,12 @@ WSGI_APPLICATION = "obcollection.wsgi.application"
 
 AUTH_USER_MODEL = "obpages.User"
 
+# Login and logout URLs
+
+LOGIN_URL = "/account/login"
+
+LOGIN_REDIRECT_URL = "/account"
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
