@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "ordered_model",
     "obapi",
     "obpages",
+    "django.forms",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# Forms
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 WSGI_APPLICATION = "obcollection.wsgi.application"
 
