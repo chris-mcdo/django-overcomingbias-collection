@@ -22,3 +22,6 @@ urlpatterns = [
     path("", include("obapi.urls")),
     path("", include("obpages.urls")),
 ]
+
+# Error handlers
+handler500 = "obpages.views.server_error"
