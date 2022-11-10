@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "debug_toolbar",
+    "silk",
     "django_select2",
     "huey.contrib.djhuey",
     "hueymail",
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "silk.middleware.SilkyMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -136,3 +138,10 @@ OBPAGES_RESULTS_PER_PAGE = 10
 # https://django-haystack.readthedocs.io/en/master/tutorial.html
 
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = OBPAGES_RESULTS_PER_PAGE
+
+
+# Silk settings
+
+# Require user to be logged in, and have relevant permission (is_staff by default)
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True

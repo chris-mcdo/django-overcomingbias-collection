@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    path("silk/", include("silk.urls", namespace="silk")),
     path("debug/", include("debug_toolbar.urls")),
     path("admin/", admin.site.urls),
     path("", include("obapi.urls")),
