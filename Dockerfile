@@ -49,8 +49,8 @@ RUN \
     chgrp ${DJANGO_GROUP} /etc/opt/${DJANGO_PROJECT}; \
     chmod 750 /etc/opt/${DJANGO_PROJECT}; \
     # Make static and media directories
-    mkdir -p /var/opt/${DJANGO_PROJECT}/media /var/opt/${DJANGO_PROJECT}/static; \
-    chown ${DJANGO_USER}:${DJANGO_GROUP} /var/opt/${DJANGO_PROJECT}/media /var/opt/${DJANGO_PROJECT}/static; \
+    mkdir -p /var/opt/${DJANGO_PROJECT}/media /var/opt/${DJANGO_PROJECT}/static /var/opt/${DJANGO_PROJECT}/silk; \
+    chown ${DJANGO_USER}:${DJANGO_GROUP} /var/opt/${DJANGO_PROJECT}/media /var/opt/${DJANGO_PROJECT}/static /var/opt/${DJANGO_PROJECT}/silk; \
     # Remove source code
     rm -rf /tmp/*; \
     # Purge build dependencies
