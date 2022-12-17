@@ -47,7 +47,7 @@ production = [
     "psycopg2",
     "python-json-logger",
     "django-storages[google]",
-    "django-overcomingbias-pages[redis,elasticsearch]",
+    "django-overcomingbias-pages[redis,elasticsearch,recaptcha]",
 ]
 local = ["python-dotenv>=0.20.0"]
 

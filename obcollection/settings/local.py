@@ -93,6 +93,9 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# Whether to use recaptcha
+USE_RECAPTCHA = False
+# RECAPTCHA_KEY = "your-key-here"
 
 # django-overcomingbias-api settings
 
