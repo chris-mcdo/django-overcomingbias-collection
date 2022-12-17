@@ -55,7 +55,7 @@ local = ["python-dotenv>=0.20.0"]
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "obpages/_version.py"
+version-file = "obcollection/_version.py"
 
 [tool.isort]
 profile = "black"

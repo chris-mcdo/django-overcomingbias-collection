@@ -9,3 +9,4 @@ __pycache__
 *.egg-info/
 setup-server
 settings.py
+_version.py
