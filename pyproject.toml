@@ -1,6 +1,63 @@
 [build-system]
-requires = [
-  "setuptools>=45",
-  "wheel",
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-overcomingbias-collection"
+description = "production environment for django-overcomingbias-pages"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+keywords = ["django", "overcomingbias", "scrape", "website", "content"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Environment :: Web Environment",
+    "Framework :: Django",
 ]
-build-backend = "setuptools.build_meta"
+dependencies = [
+    "django-overcomingbias-pages",
+    "django-debug-toolbar",
+    "django-silk",
+    "django-huey-email-backend",
+]
+authors = [{ name = "Christopher McDonald", email = "cmcdonal33@gmail.com" }]
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/chris-mcdo/django-overcomingbias-collection"
+issues = "https://github.com/chris-mcdo/django-overcomingbias-collection/issues"
+
+[project.optional-dependencies]
+production = [
+    "gunicorn",
+    "psycopg2",
+    "python-json-logger",
+    "django-storages[google]",
+    "redis>=4",
+    "hiredis",
+    "elasticsearch>=7,<8",
+]
+local = ["python-dotenv>=0.20.0"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "obpages/_version.py"
+
+[tool.isort]
+profile = "black"
