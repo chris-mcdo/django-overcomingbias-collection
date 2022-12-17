@@ -27,11 +27,11 @@ RUN apt-get update; \
 COPY . /tmp/code/${DJANGO_PROJECT}
 
 # Install from source in a virtual environment, then cleanup 
-RUN \
+RUN set -eux; \
     # Build dependencies
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libpq-dev gcc python3-dev musl-dev; \
+    apt-get install -y --no-install-recommends libpq-dev gcc python3-dev musl-dev git-all; \
     \
     # Set up virtual environment
     /usr/local/bin/python3 -m venv /opt/${DJANGO_PROJECT}/venv; \
