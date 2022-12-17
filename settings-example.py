@@ -1,4 +1,3 @@
-# Example production settings
 from pathlib import Path
 
 from redis import ConnectionPool
@@ -28,6 +27,8 @@ YOUTUBE_API_KEY = load_secret("youtube-api-key")
 SPOTIFY_CLIENT_ID = load_secret("spotify-client-id")
 SPOTIFY_CLIENT_SECRET = load_secret("spotify-client-secret")
 SITE_HOST_NAME = load_secret("site-host-name")
+# RECAPTCHA_KEY = load_secret("recaptcha-key")
+# GOOGLE_PROJECT_ID = load_secret("google-project-id")
 
 # Debug mode
 DEBUG = False
@@ -47,8 +48,8 @@ STATIC_URL = "static/"
 
 # Media file server location
 # https://docs.djangoproject.com/en/4.0/ref/settings/#media-root
-MEDIA_ROOT = "/var/www/example.com/media/"
-MEDIA_URL = "media/"
+MEDIA_ROOT = "/var/opt/obcollection/media/"
+MEDIA_URL = "/media/"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -73,7 +74,7 @@ connection_pool = ConnectionPool(host="127.0.0.1", port=6379, db=0, max_connecti
 # See docs for full list of settings
 HUEY = {
     "huey_class": "huey.PriorityRedisHuey",
-    "name": "example",
+    "name": "obcollection",
     "immediate": False,
     "connection": {
         "connection_pool": connection_pool,
@@ -116,7 +117,7 @@ ADMINS = [
 ]
 MANAGERS = ADMINS
 
-EMAIL_HOST = "smtp.my-email-host.com"
+EMAIL_HOST = load_secret("email-host")
 EMAIL_HOST_USER = load_secret("email-host-user")
 EMAIL_HOST_PASSWORD = load_secret("email-host-password")
 EMAIL_PORT = 465
@@ -141,8 +142,8 @@ LOGGING = {
             "formatter": "json",
         },
     },
-    # log everything to stderr
     "loggers": {
+        # log everything to stderr
         "": {
             "level": "INFO",
             "handlers": ["stderr"],
@@ -157,7 +158,28 @@ LOGGING = {
 }
 
 # Caching
-# ...
+# Database 0 is used by Huey
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+    },
+    "select2": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+    },
+}
+
+# Cache to use with select2
+SELECT2_CACHE_BACKEND = "select2"
+
+# reCAPTCHA
+USE_RECAPTCHA = True
 
 # django-overcomingbias-api
-OBAPI_DOWNLOAD_BATCH_SIZE = 200
+OBAPI_DOWNLOAD_BATCH_SIZE = 500
+
+# Silk
+SILKY_PYTHON_PROFILER = True
+SILKY_PYTHON_PROFILER_BINARY = True
+SILKY_PYTHON_PROFILER_RESULT_PATH = "/var/opt/obcollection/silk/"
