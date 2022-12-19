@@ -57,5 +57,11 @@ source = "vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "obcollection/_version.py"
 
+[tool.hatch.build.targets.sdist]
+include = ["obcollection/", "manage.py"]
+
+[tool.hatch.build.targets.wheel]
+include = ["obcollection/"]
+
 [tool.isort]
 profile = "black"
