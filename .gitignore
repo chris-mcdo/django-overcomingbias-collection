@@ -1,12 +1,11 @@
-/runserver
+dist/
+.venv/
+__pycache__/
+*.egg-info/
 *.env
-.venv
-__pycache__
 *.pyc
 *.code-workspace
 *.sqlite3
 *.log
-*.egg-info/
-setup-server
-settings.py
+runserver
 _version.py
