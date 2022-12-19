@@ -4,13 +4,13 @@
 *.egg-info
 # files
 runserver
-.gitignore
 *.env
 **/__pycache__
 **/*.pyc
 *.code-workspace
 *.sqlite3
 *.log
+.flake8
 setup-server
 example-settings.py
 
@@ -18,3 +18,4 @@ example-settings.py
 # .git
 # LICENSE
 # README.rst
+# .gitignore
