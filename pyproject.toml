@@ -46,7 +46,7 @@ production = [
     "gunicorn",
     "psycopg2",
     "python-json-logger",
-    "django-storages[google]",
+    "whitenoise[brotli]",
     "django-overcomingbias-pages[redis,elasticsearch,recaptcha]",
 ]
 local = ["python-dotenv>=0.20.0"]

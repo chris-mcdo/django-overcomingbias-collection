@@ -23,6 +23,14 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = []
 
+# Static files
+# https://whitenoise.evans.io/en/stable/django.html
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Prevent runserver from serving static files
+INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
