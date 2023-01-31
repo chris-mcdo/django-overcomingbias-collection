@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 # Application definition
 
 INSTALLED_APPS = [
-    "obcollection.apps.CustomAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -29,6 +28,7 @@ INSTALLED_APPS = [
     "ordered_model",
     "obapi",
     "obpages",
+    "obcollection.apps.CustomAdminConfig",
     "django.forms",
 ]
 
