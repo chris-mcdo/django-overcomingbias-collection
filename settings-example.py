@@ -93,17 +93,9 @@ HUEY = {
 # Lifetime of database connection (set to 0 if using a connection pooler)
 CONN_MAX_AGE = 60
 
-# Haystack
-# Haystack settings
-# https://django-haystack.readthedocs.io/en/master/tutorial.html
-
-HAYSTACK_CONNECTIONS = {
-    "default": {
-        "ENGINE": "haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine",
-        "URL": "http://127.0.0.1:9200/",
-        "INDEX_NAME": "example",
-    },
-}
+# Search settings
+MEILISEARCH_INDEX = "content"
+MEILISEARCH_CLIENT = {"url": "http://127.0.0.1:7700"}
 
 # Email
 # https://docs.djangoproject.com/en/4.0/topics/email/

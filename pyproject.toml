@@ -47,7 +47,7 @@ production = [
     "psycopg2",
     "python-json-logger",
     "whitenoise[brotli]",
-    "django-overcomingbias-pages[redis,elasticsearch,recaptcha]",
+    "django-overcomingbias-pages[production]",
 ]
 local = ["python-dotenv>=0.20.0"]
 

@@ -92,15 +92,10 @@ HUEY = {
     "immediate": True,
 }
 
+# Search settings
+MEILISEARCH_INDEX = "content"
+MEILISEARCH_CLIENT = {"url": "http://127.0.0.1:7700"}
 
-# Haystack settings
-# https://django-haystack.readthedocs.io/en/master/tutorial.html
-
-HAYSTACK_CONNECTIONS = {
-    "default": {
-        "ENGINE": "haystack.backends.simple_backend.SimpleEngine",
-    },
-}
 
 # Whether to use recaptcha
 USE_RECAPTCHA = False

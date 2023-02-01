@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     "django_select2",
     "huey.contrib.djhuey",
     "hueymail",
-    "haystack",
     "ordered_model",
     "obapi",
     "obpages",
@@ -133,12 +132,6 @@ OBPAGES_RESULTS_PER_SECTION = 5
 
 # Results per page for paginated lists
 OBPAGES_RESULTS_PER_PAGE = 10
-
-
-# Haystack settings
-# https://django-haystack.readthedocs.io/en/master/tutorial.html
-
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = OBPAGES_RESULTS_PER_PAGE
 
 
 # Silk settings
