@@ -1,0 +1,29 @@
+name: container
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build reviewed package revisions
+        # Replace these review source pins with approved package versions after release.
+        run: |
+          docker build --tag collection-review \
+            --build-arg 'OBAPI_REQUIREMENT=django-overcomingbias-api @ git+https://github.com/chris-mcdo/django-overcomingbias-api.git@027b7744f6d2e2659c71fc86f73abbed52087275' \
+            --build-arg 'OBPAGES_REQUIREMENT=django-overcomingbias-pages @ git+https://github.com/chris-mcdo/django-overcomingbias-pages.git@e5493a42ede88314f3f49dd8f1de1d4bf6626700' \
+            --build-arg COLLECTION_VERSION=0.8.0rc1 .
+      - name: Offline web and worker startup checks
+        run: |
+          docker run --rm --network none --read-only \
+            --tmpfs /tmp:rw,nosuid,size=64m \
+            --mount type=bind,src="$PWD/container/smoke.py",dst=/smoke.py,readonly \
+            --entrypoint /opt/obcollection/venv/bin/python collection-review /smoke.py
