@@ -25,7 +25,6 @@ ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Static files
 # https://whitenoise.evans.io/en/stable/django.html
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 WHITENOISE_MANIFEST_STRICT = False
 

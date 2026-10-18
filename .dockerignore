@@ -1,21 +1,12 @@
-# folders
-.github
-.venv
-*.egg-info
-# files
-runserver
-*.env
+*
+!Dockerfile
+!pyproject.toml
+!README.rst
+!LICENSE
+!manage.py
+!obcollection/
+!obcollection/**
+!container/
+!container/**
 **/__pycache__
 **/*.pyc
-*.code-workspace
-*.sqlite3
-*.log
-.flake8
-setup-server
-example-settings.py
-
-# The following are needed by setuptools_scm and should not be ignored
-# .git
-# LICENSE
-# README.rst
-# .gitignore

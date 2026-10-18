@@ -20,6 +20,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Require reviewed dependency versions
+        env:
+          OBAPI_VERSION: ${{ vars.OBAPI_VERSION }}
+          OBPAGES_VERSION: ${{ vars.OBPAGES_VERSION }}
+        run: |
+          test -n "$OBAPI_VERSION" && test -n "$OBPAGES_VERSION"
+          python - <<'PY'
+          import os, re
+          for name in ['OBAPI_VERSION', 'OBPAGES_VERSION']:
+              if not re.fullmatch(r'[0-9]+(?:\.[0-9]+)*(?:(?:a|b|rc)[0-9]+|\.post[0-9]+)?', os.environ[name]):
+                  raise SystemExit('Set an explicit reviewed package version: ' + name)
+          PY
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
@@ -42,6 +55,10 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          build-args: |
+            OBAPI_REQUIREMENT=django-overcomingbias-api==${{ vars.OBAPI_VERSION }}
+            OBPAGES_REQUIREMENT=django-overcomingbias-pages==${{ vars.OBPAGES_VERSION }}
+            COLLECTION_VERSION=${{ steps.meta.outputs.version }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
