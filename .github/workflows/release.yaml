@@ -20,10 +20,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Load reviewed package versions
+        run: cat container/package-versions.env >> "$GITHUB_ENV"
+
       - name: Require reviewed dependency versions
-        env:
-          OBAPI_VERSION: ${{ vars.OBAPI_VERSION }}
-          OBPAGES_VERSION: ${{ vars.OBPAGES_VERSION }}
         run: |
           test -n "$OBAPI_VERSION" && test -n "$OBPAGES_VERSION"
           python - <<'PY'
@@ -68,8 +68,8 @@ jobs:
         with:
           context: .
           build-args: |
-            OBAPI_REQUIREMENT=django-overcomingbias-api==${{ vars.OBAPI_VERSION }}
-            OBPAGES_REQUIREMENT=django-overcomingbias-pages==${{ vars.OBPAGES_VERSION }}
+            OBAPI_REQUIREMENT=django-overcomingbias-api==${{ env.OBAPI_VERSION }}
+            OBPAGES_REQUIREMENT=django-overcomingbias-pages==${{ env.OBPAGES_VERSION }}
             COLLECTION_VERSION=${{ steps.meta.outputs.version }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
