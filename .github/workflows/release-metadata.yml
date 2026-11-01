@@ -16,7 +16,7 @@ jobs:
       matrix:
         version: ["0.8.1", "1.2.3", "0.8.1rc1"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Read production release tag patterns
         id: patterns
         env:
@@ -34,7 +34,7 @@ jobs:
           PY
       - name: Exercise the real metadata action
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: example/release-check
           flavor: latest=false

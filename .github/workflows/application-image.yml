@@ -1,0 +1,136 @@
+name: application image
+run-name: Application image from ${{ inputs.revision }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'Reviewed main commit to build (full 40-character SHA)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: application-image-${{ inputs.revision }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.identity.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require an exact reviewed main revision
+        env:
+          REVISION: ${{ inputs.revision }}
+        run: |
+          [[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]
+          git merge-base --is-ancestor "$REVISION" origin/main
+          git checkout --detach "$REVISION"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Choose unique application build identity
+        id: identity
+        env:
+          REVISION: ${{ inputs.revision }}
+        run: |
+          tag="app-${REVISION:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          image="ghcr.io/${GITHUB_REPOSITORY,,}:$tag"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+      - name: Run manifest regression tests
+        run: python -m unittest discover -s container/tests -v
+      - name: Build exact manifest and check offline web/worker startup
+        env:
+          IMAGE: ${{ steps.identity.outputs.image }}
+        run: bash container/build-application.sh "$IMAGE"
+      - name: Record candidate provenance and save the tested image
+        env:
+          IMAGE: ${{ steps.identity.outputs.image }}
+          REVISION: ${{ inputs.revision }}
+        run: |
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          manifest = json.loads(Path('build/application.json').read_text())
+          manifest.update(source_revision=os.environ['REVISION'], image_tag=os.environ['IMAGE'],
+                          install_lock_sha256=hashlib.sha256(Path('build/install.lock').read_bytes()).hexdigest())
+          Path('build/provenance.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          docker save "$IMAGE" | gzip -1 > build/image.tar.gz
+          {
+            echo '### Tested application candidate'
+            echo "Source: \`$REVISION\`"
+            echo "Image: \`$IMAGE\`"
+            echo '```json'
+            cat build/provenance.json
+            echo '```'
+            echo 'Review the exact source, packages, and checks before approving publication.'
+            echo 'Publishing this image does not deploy it.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: application-candidate
+          path: build/
+          compression-level: 0
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: application-image
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Require owner-configured publication environment
+        env:
+          ENABLED: ${{ vars.APPLICATION_IMAGE_PUBLISH_ENABLED }}
+        run: test "$ENABLED" = true
+      - uses: actions/download-artifact@v4
+        with:
+          name: application-candidate
+          path: build
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the tested image and record its immutable digest
+        env:
+          IMAGE: ${{ needs.build.outputs.image }}
+        run: |
+          set -euo pipefail
+          gzip -dc build/image.tar.gz | docker load
+          docker push "$IMAGE"
+          docker image inspect "$IMAGE" --format '{{json .RepoDigests}}' > build/digests.json
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          digests = json.loads(Path('build/digests.json').read_text())
+          repository = os.environ['IMAGE'].split(':')[0]
+          ref, = [d for d in digests if d.startswith(repository + '@sha256:')]
+          path = Path('build/provenance.json')
+          report = json.loads(path.read_text())
+          report['image_digest'] = ref
+          path.write_text(json.dumps(report, indent=2) + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('### Published application image\n\n`' + ref + '`\n\n')
+              summary.write('Deploy this digest to both web and worker after separate deployment approval.\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: application-publication
+          path: |
+            build/provenance.json
+            build/application.json
+            build/install.lock
+            build/digests.json
+          retention-days: 90

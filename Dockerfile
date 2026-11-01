@@ -8,18 +8,16 @@ COPY container/wheel_lock.py /build/wheel_lock.py
 COPY pyproject.toml README.rst LICENSE manage.py /build/collection/
 COPY obcollection /build/collection/obcollection
 
-# Supply reviewed versions or immutable public source references explicitly.
-# Source refs allow PR builds without publishing packages before review.
-ARG OBAPI_REQUIREMENT
-ARG OBPAGES_REQUIREMENT
+# Package versions and public wheel hashes are reviewed together in application.json.
+COPY container/application.py container/application-policy.json container/application.json /build/application/
 ARG COLLECTION_VERSION
-RUN test -n "$OBAPI_REQUIREMENT" && test -n "$OBPAGES_REQUIREMENT" \
-    && test -n "$COLLECTION_VERSION" \
+RUN python /build/application/application.py download --directory /application-wheels
+RUN test -n "$COLLECTION_VERSION" \
     && SETUPTOOLS_SCM_PRETEND_VERSION="$COLLECTION_VERSION" \
        pip wheel --no-deps --wheel-dir /collection-wheel /build/collection \
     && set -- /collection-wheel/*.whl && test "$#" -eq 1 \
     && pip wheel --wheel-dir /wheels -c /build/requirements.lock \
-       -r /build/requirements.lock "$OBAPI_REQUIREMENT" "$OBPAGES_REQUIREMENT" \
+       -r /build/requirements.lock /application-wheels/*.whl \
        "$1[production]" \
     && python /build/wheel_lock.py /wheels \
     && python -m venv /opt/obcollection/venv \
@@ -27,6 +25,7 @@ RUN test -n "$OBAPI_REQUIREMENT" && test -n "$OBPAGES_REQUIREMENT" \
        --require-hashes -r /wheels/install.lock \
     && /opt/obcollection/venv/bin/pip check \
     && cp /wheels/install.lock /opt/obcollection/requirements.lock \
+    && cp /build/application/application.json /opt/obcollection/application.json \
     && cp /build/collection/manage.py /opt/obcollection/manage.py
 
 FROM python:3.13-slim-trixie@sha256:70729b46c69b4f1e97c4822c1af3df53a1476cf5ddc6c087c0c10bc3a5678c2f

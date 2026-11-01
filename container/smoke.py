@@ -18,6 +18,8 @@ settings.ALLOWED_HOSTS = ['testserver']
 settings.DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}
 settings.STATIC_ROOT = '/tmp/static'
 settings.STATIC_URL = '/static/'
+# Synthetic settings match the existing isolated search/startup rehearsal.
+settings.WHITENOISE_MANIFEST_STRICT = False
 settings.MEDIA_ROOT = '/tmp/media'
 settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 settings.HUEY_EMAIL_BACKEND = settings.EMAIL_BACKEND
@@ -51,3 +53,25 @@ print(json.dumps({'offline_wsgi_startup': True, 'worker_task_imports': True,
                   'packages': {name: importlib.metadata.version(name) for name in
                                ['django-overcomingbias-api', 'django-overcomingbias-pages',
                                 'django-overcomingbias-collection']}}))
+
+# The image must contain exactly the reviewed application wheels and their hashes.
+from pathlib import Path
+manifest = json.loads(Path('/opt/obcollection/application.json').read_text())
+lock = Path('/opt/obcollection/requirements.lock').read_text()
+assert importlib.metadata.version('django-overcomingbias-collection') == manifest['collection_version']
+for name, item in manifest['packages'].items():
+    assert importlib.metadata.version(name) == item['version']
+    assert name + '==' + item['version'] + ' --hash=sha256:' + item['sha256'] in lock
+call_command('collectstatic', interactive=False, verbosity=0)
+from django.test import RequestFactory
+from django.contrib.auth.models import AnonymousUser
+from obpages.views import FeedbackView
+for data in [{}, {'feedback': ''}, {'feedback': '   '}]:
+    request = RequestFactory().post('/feedback', data)
+    request.user = AnonymousUser()
+    response = FeedbackView.as_view()(request)
+    assert response.status_code == 200
+    response.render()
+    assert 'feedback' in response.context_data['form'].errors
+    assert b'This field is required.' in response.content
+print('Reviewed manifest, wheel hashes, and invalid feedback rendering passed')

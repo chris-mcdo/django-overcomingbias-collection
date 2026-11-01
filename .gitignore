@@ -11,3 +11,4 @@ __pycache__/
 runserver
 _version.py
 /experiment.py
+/build/
