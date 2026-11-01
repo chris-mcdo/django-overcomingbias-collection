@@ -12,6 +12,7 @@ docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-
   --tmpfs /tmp:rw,nosuid,size=128m \
   --mount type=bind,src="$PWD/container/smoke.py",dst=/smoke.py,readonly \
   --entrypoint /opt/obcollection/venv/bin/python "$image" /smoke.py
+sh deploy/security/check.sh "$image"
 mkdir -p build
 # Retain the actual offline installation lock, including built third-party wheels.
 docker run --rm --network none --read-only --entrypoint cat "$image" \

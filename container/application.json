@@ -1,5 +1,5 @@
 {
-  "collection_version": "0.8.3",
+  "collection_version": "0.8.4",
   "packages": {
     "django-overcomingbias-api": {
       "filename": "django_overcomingbias_api-0.7.1-py3-none-any.whl",
@@ -8,10 +8,10 @@
       "version": "0.7.1"
     },
     "django-overcomingbias-pages": {
-      "filename": "django_overcomingbias_pages-0.8.1-py3-none-any.whl",
-      "sha256": "94b62ddeaea682ea06262834650f5b358b8230b012ff57d4da934c0604afc0f2",
-      "url": "https://files.pythonhosted.org/packages/d0/45/379927445ed19a8eaadbd89711c635dd2d65e6395e6772a7d2a3cb750a75/django_overcomingbias_pages-0.8.1-py3-none-any.whl",
-      "version": "0.8.1"
+      "filename": "django_overcomingbias_pages-0.8.2-py3-none-any.whl",
+      "sha256": "e5952a8443580f91adccd2e589e3ab1406015a5ee810cc4b334db14513bd1e8d",
+      "url": "https://files.pythonhosted.org/packages/36/22/6ef3f0baed03eda8bd871b85b4822e72ed542ade3aeddd03b4c2263c8401/django_overcomingbias_pages-0.8.2-py3-none-any.whl",
+      "version": "0.8.2"
     }
   },
   "schema": 1

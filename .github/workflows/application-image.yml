@@ -53,6 +53,10 @@ jobs:
         env:
           IMAGE: ${{ steps.identity.outputs.image }}
         run: bash container/build-application.sh "$IMAGE"
+      - name: Check released Swarm firewall behavior
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends nftables iproute2
+          sudo unshare -n python3 deploy/security/check_firewall.py --isolated
       - name: Record candidate provenance and save the tested image
         env:
           IMAGE: ${{ steps.identity.outputs.image }}

@@ -9,7 +9,7 @@ separate approval. Use the same image for web and Huey workers.
 ## Inputs and compatibility
 
 - `application-policy.json`: collection source version and permitted API/pages
-  intervals. Initially API `>=0.7.1,<0.8.0`, pages `>=0.8.1,<0.9.0`. Only stable
+  intervals. Initially API `>=0.7.1,<0.8.0`, pages `>=0.8.2,<0.9.0`. Only stable
   three-component versions and universal `py3-none-any` wheels are selected.
 - `application.json`: exact published API/pages versions, canonical wheel URLs
   and SHA-256 hashes. This tracked manifest is authoritative for both CI and
@@ -117,7 +117,9 @@ an exact hash install lock and installs into the image offline with
 `--require-hashes`. Python/Debian base image, third-party constraints, Pandoc/
 XeLaTeX, UID/GID 373 and mounted settings paths are retained. Image CI uses no
 network or production mounts for startup tests and checks Django/WSGI, worker
-imports, manifest/package/hash agreement and invalid feedback rendering.
+imports, manifest/package/hash agreement, invalid feedback rendering, and Redis
+ACL/signed-message integration in a disposable private network. Candidate CI
+also retains isolated IPv4/IPv6 Swarm firewall behavior checks.
 
 The image embeds `/opt/obcollection/application.json` and `requirements.lock`;
 OCI labels identify the source revision and unique build identifier. Published
@@ -129,3 +131,14 @@ Rollback is separately approved: restore the previous verified digest on both
 services only after checking migrations and writes accepted since deployment.
 An image rollback does not reverse database changes. Never patch running
 containers or install floating dependencies at startup.
+
+
+## Security release baseline
+
+The initial manifest retains the deployed collection 0.8.4/API 0.7.1/pages 0.8.2
+baseline. Compatibility bounds reject pages versions predating its authorization
+fix. Authenticated Redis, signed tasks and host ingress protection remain in the
+source/configuration; use [the security activation runbook](../deploy/security/README.md)
+when changing that setup. After signing is enabled, an image-only rollback to an
+unsigned configuration is unsafe: freeze writers and reconcile signed work as
+described there. Dependency automation must preserve these security checks.

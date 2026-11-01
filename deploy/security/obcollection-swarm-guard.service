@@ -1,0 +1,14 @@
+[Unit]
+Description=Restrict public Swarm ingress on single-node angara
+Before=docker.service
+After=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/nft -f /etc/obcollection-security/angara-swarm.nft
+ExecStop=/usr/sbin/nft delete table inet obcollection_swarm
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

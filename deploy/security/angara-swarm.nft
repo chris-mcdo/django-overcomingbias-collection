@@ -1,0 +1,7 @@
+# Single-node angara: eth0 is its public/default-route interface.
+# Reject Swarm traffic before VXLAN decapsulation; leave SSH/HTTP/HTTPS alone.
+# Add only this table; never flush the host/Docker ruleset.
+add table inet obcollection_swarm
+add chain inet obcollection_swarm ingress_guard { type filter hook prerouting priority -310; policy accept; }
+add rule inet obcollection_swarm ingress_guard iifname "eth0" tcp dport { 2377, 7946 } counter drop
+add rule inet obcollection_swarm ingress_guard iifname "eth0" udp dport { 4789, 7946 } counter drop

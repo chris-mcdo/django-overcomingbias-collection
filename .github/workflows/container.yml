@@ -21,3 +21,7 @@ jobs:
         run: python -m unittest discover -s container/tests -v
       - name: Build reviewed manifest and check offline web/worker startup
         run: bash container/build-application.sh collection-review
+      - name: Swarm firewall namespace checks
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends nftables iproute2
+          sudo unshare -n python3 deploy/security/check_firewall.py --isolated

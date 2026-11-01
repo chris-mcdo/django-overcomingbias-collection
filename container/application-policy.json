@@ -1,8 +1,14 @@
 {
   "schema": 1,
-  "collection_version": "0.8.3",
+  "collection_version": "0.8.4",
   "packages": {
-    "django-overcomingbias-api": {"minimum": "0.7.1", "exclusive_maximum": "0.8.0"},
-    "django-overcomingbias-pages": {"minimum": "0.8.1", "exclusive_maximum": "0.9.0"}
+    "django-overcomingbias-api": {
+      "minimum": "0.7.1",
+      "exclusive_maximum": "0.8.0"
+    },
+    "django-overcomingbias-pages": {
+      "minimum": "0.8.2",
+      "exclusive_maximum": "0.9.0"
+    }
   }
 }
