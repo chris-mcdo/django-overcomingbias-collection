@@ -13,24 +13,14 @@ jobs:
   build-and-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Load reviewed package versions
-        run: cat container/package-versions.env >> "$GITHUB_ENV"
-      - name: Build reviewed published packages
-        # Build the approved published dependency versions.
-        run: |
-          docker build --tag collection-review \
-            --build-arg "OBAPI_REQUIREMENT=django-overcomingbias-api==$OBAPI_VERSION" \
-            --build-arg "OBPAGES_REQUIREMENT=django-overcomingbias-pages==$OBPAGES_VERSION" \
-            --build-arg COLLECTION_VERSION=0.8.4rc1 .
-      - name: Offline web and worker startup checks
-        run: |
-          docker run --rm --network none --read-only \
-            --tmpfs /tmp:rw,nosuid,size=64m \
-            --mount type=bind,src="$PWD/container/smoke.py",dst=/smoke.py,readonly \
-            --entrypoint /opt/obcollection/venv/bin/python collection-review /smoke.py
-      - name: Redis ACL and signed-message integration
-        run: sh deploy/security/check.sh collection-review
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test application manifest selection and validation
+        run: python -m unittest discover -s container/tests -v
+      - name: Build reviewed manifest and check offline web/worker startup
+        run: bash container/build-application.sh collection-review
       - name: Swarm firewall namespace checks
         run: |
           sudo apt-get update && sudo apt-get install -y --no-install-recommends nftables iproute2

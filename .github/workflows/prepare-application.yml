@@ -1,0 +1,54 @@
+name: prepare application update
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: prepare-application
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Select published compatible wheels and open a review PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python container/application.py resolve
+          if git diff --quiet -- container/application.json; then exit 0; fi
+          branch="automation/application-$(sha256sum container/application.json | cut -c1-12)"
+          existing=$(gh pr list --head "$branch" --state all --json number --jq 'length')
+          if [ "$existing" != 0 ]; then exit 0; fi
+          if ! git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+            git switch -c "$branch"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add container/application.json
+            git commit -m 'Update compatible application packages'
+            git push origin "$branch"
+          fi
+          cat > /tmp/application-pr.md <<'BODY'
+          Select newer stable API/pages packages within the reviewed compatibility ranges.
+          The manifest records exact published wheel versions, URLs and SHA-256 hashes.
+
+          Review the package changes and passing container checks before merging.
+          Publication and deployment require separate approval; this PR does neither.
+          BODY
+          gh pr create --base main --head "$branch" --title 'Update compatible application packages' --body-file /tmp/application-pr.md
+          # Explicit dispatch works with GITHUB_TOKEN and avoids relying on bot PR events.
+          gh workflow run container.yml --ref "$branch"
+          gh workflow run release-metadata.yml --ref "$branch"
