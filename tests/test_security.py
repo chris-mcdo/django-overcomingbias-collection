@@ -89,6 +89,7 @@ class SecurityTests(unittest.TestCase):
             self.assertEqual(cache.get_many(["a", "b"]), {"a": 2, "b": 3})
             self.assertEqual(cache.incr("audit"), 2)
             self.assertTrue(cache.touch("audit", 30))
+            self.assertTrue(cache.touch("audit", None))
             cache.delete_many(["a", "b", "audit"])
             client = Redis(host=host, username=config["OPTIONS"]["username"],
                            password=config["OPTIONS"]["password"])

@@ -13,7 +13,7 @@ HUEY_COMMANDS = (
     "+eval +evalsha +script|load +multi +exec +discard"
 )
 CACHE_COMMANDS = (
-    "+get +mget +set +mset +del +exists +expire +ttl +incr +incrby "
+    "+get +mget +set +mset +del +exists +expire +persist +ttl +incr +incrby "
     "+multi +exec +discard"
 )
 
