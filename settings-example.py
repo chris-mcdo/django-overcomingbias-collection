@@ -175,3 +175,8 @@ OBAPI_DOWNLOAD_BATCH_SIZE = 500
 SILKY_PYTHON_PROFILER = True
 SILKY_PYTHON_PROFILER_BINARY = True
 SILKY_PYTHON_PROFILER_RESULT_PATH = "/var/opt/obcollection/silk/"
+
+# Production Redis ACLs and signed Huey messages (deploy/security/README.md).
+# Activate only after installing the matching ACL/secret files and draining old tasks.
+# from obcollection.security import configure_redis
+# configure_redis(globals(), SECRETS_DIR, redis_host="127.0.0.1")
