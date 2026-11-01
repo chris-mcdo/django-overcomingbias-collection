@@ -22,7 +22,7 @@ jobs:
           docker build --tag collection-review \
             --build-arg "OBAPI_REQUIREMENT=django-overcomingbias-api==$OBAPI_VERSION" \
             --build-arg "OBPAGES_REQUIREMENT=django-overcomingbias-pages==$OBPAGES_VERSION" \
-            --build-arg COLLECTION_VERSION=0.8.2rc1 .
+            --build-arg COLLECTION_VERSION=0.8.3rc1 .
       - name: Offline web and worker startup checks
         run: |
           docker run --rm --network none --read-only \

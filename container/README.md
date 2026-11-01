@@ -18,13 +18,12 @@ Three explicit build arguments are required:
 - `COLLECTION_VERSION`: the collection version to embed when building without
   Git metadata. The override applies only to collection, not its dependencies.
 
-PR CI currently selects the exact API/pages review commits so no package needs to
-be published before review. `0.8.0rc1` identifies the local collection test build;
-it is not a published or approved release. Replace temporary CI source pins after
-the compatibility releases. Release CI requires repository variables
-`OBAPI_VERSION` and `OBPAGES_VERSION` containing explicit reviewed package versions;
-it builds collection at the image's tag-derived version. Do not tag a release
-until the dependency PRs are reviewed and their package versions are available.
+Both PR CI and release builds read the reviewed API and pages versions from
+`container/package-versions.env`. Update that file when upgrading either package.
+Release CI builds collection at the version derived from its Git tag. Dependency
+versions must be published before building or tagging the collection release.
+The feedback fix is included in pages 0.8.1 and subsequent releases, using this
+same build path for the web application and Huey worker.
 
 Run the offline image check after building:
 
