@@ -77,14 +77,14 @@ https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deploymen
    main revision. It first builds and tests without publishing. No collection
    release or version bump is required for a dependency-only change.
 5. Inspect the candidate summary, source SHA, selected package versions, checks
-   and `application-candidate` artifact. Approve the **application-image**
+   and `application-candidate-<attempt>` artifact. Approve the **application-image**
    environment job to publish. It uploads the *same tested image*, rather than
    rebuilding after approval. Candidate artifacts expire after seven days; if
    approval is delayed past expiry, rerun and review the new candidate.
 6. The publication summary supplies a digest such as
    `ghcr.io/chris-mcdo/django-overcomingbias-collection@sha256:...`. Tags look like
    `app-<source-sha-prefix>-<run-id>-<attempt>`; each rerun has a distinct identity.
-   Download `application-publication` for provenance, exact installation lock and
+   Download `application-publication-<attempt>` for provenance, exact installation lock and
    digest. Archive this evidence with the deployment record (Actions artifacts
    are retained for 90 days). The reviewed manifest and registry image persist
    independently of Actions artifacts.

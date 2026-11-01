@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.identity.outputs.image }}
+      artifact: ${{ steps.identity.outputs.artifact }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,6 +46,7 @@ jobs:
           tag="app-${REVISION:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           image="ghcr.io/${GITHUB_REPOSITORY,,}:$tag"
           echo "image=$image" >> "$GITHUB_OUTPUT"
+          echo "artifact=application-candidate-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Run manifest regression tests
         run: python -m unittest discover -s container/tests -v
       - name: Build exact manifest and check offline web/worker startup
@@ -77,7 +79,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
-          name: application-candidate
+          name: ${{ steps.identity.outputs.artifact }}
           path: build/
           compression-level: 0
           retention-days: 7
@@ -96,7 +98,7 @@ jobs:
         run: test "$ENABLED" = true
       - uses: actions/download-artifact@v4
         with:
-          name: application-candidate
+          name: ${{ needs.build.outputs.artifact }}
           path: build
       - uses: docker/login-action@v3
         with:
@@ -127,7 +129,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: application-publication
+          name: application-publication-${{ github.run_attempt }}
           path: |
             build/provenance.json
             build/application.json
